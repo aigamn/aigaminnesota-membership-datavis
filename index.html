@@ -16,20 +16,20 @@
 
 <body ng-controller='MembershipCtrl'>
     <div class='container'>
-        <h1>AIGA Minnesota Event Attendence by Membership Level and Group</h1>
-        <div class='row'>
+        <h1>AIGA Minnesota Event Attendence and Membership Level Breakdown</h1>
+        <!--<div class='row'>
             <div class='col-sm-8'>
                  Attendance by: 
                  <div class="btn-group">
                     <button type="button" class="btn btn-primary" ng-class="{active: breakdown == 'ticket'}" ng-click='breakdown = "ticket"'>Ticketing</button>
-                    <!--<button type="button" class="btn btn-primary" ng-class="{active: breakdown == 'membership'}" ng-click='breakdown = "membership"'>Membership</button>-->
+                    <button type="button" class="btn btn-primary" ng-class="{active: breakdown == 'membership'}" ng-click='breakdown = "membership"'>Membership</button>
                     <button type="button" class="btn btn-primary" ng-class="{active: breakdown == 'student'}" ng-click='breakdown = "student"'>Student vs Non-Student</button>
                 </div>
             </div>
-            <div class='col-sm-4 text-right'>
-                <input ng-model='searchText' type='text' placeholder='Filter Events'> 
-            </div>
-       </div>
+            <div class='col-sm-4 text-right'>-->
+                Search: <input ng-model='searchText' type='text' placeholder='Filter Events'> 
+            <!--</div>
+       </div>-->
         
         <div class='clearfix'></div>
 
@@ -67,11 +67,9 @@
                         <span class='glyphicon glyphicon-minus' ng-if='year.filteredEventExpanded'></span>
                         <span class='glyphicon glyphicon-plus' ng-if='!year.filteredEventExpanded'></span>
                     </span> 
-                    Event Totals 
+                    Event Attendance Totals <span class='badge'>{{getFilteredLevelTotals(filteredEvents[year.yearName]).Total}} attendees</span>
                 </h4>
                 <div class='filteredEventTotals' ng-if='year.filteredEventExpanded'>
-                    <div class='row'>
-                        <div class='col-sm-11 no-pad'>
                             <ul class='chart list-unstyled'>
                                 <li ng-repeat='(level, count) in getFilteredLevelTotals(filteredEvents[year.yearName])' ng-style="{width: caclulatePercent(count, getFilteredLevelTotals(filteredEvents[year.yearName]).Total), background: colors[level]}" title="{{level}}: {{count}}" ng-if='level !== "Total"'></li>
                             </ul>
@@ -79,12 +77,7 @@
                                 <li class='col-sm-4' ng-repeat='(level, count) in getFilteredLevelTotals(filteredEvents[year.yearName])' ng-if='level !== "Total"'>
                                     <span class='swatch' ng-style="{background: colors[level]}"></span> {{level}}: {{count}}
                                 </li>
-                            </ul>
-                        </div>
-                        <div class='col-sm-1 text-right'>
-                            <strong>{{getFilteredLevelTotals(filteredEvents[year.yearName]).Total}}</strong>
-                        </div>
-                    </div>    
+                            </ul>  
                 </div>
 
                 <h4 class='collapsibleHeader' ng-click='year.eventsExpanded = !year.eventsExpanded'>
@@ -94,7 +87,7 @@
                     </span>
                     Events <span class='badge'>{{filteredEvents[year.yearName].length}} of {{::year.events.length}} visible<!-- -- {{filteredEvents[year.yearName].length / year.events.length * 100}}%--></span>
                 </h4>
-                <div class='events' ng-if='year.eventsExpanded'>
+                <div class='events' ng-show='year.eventsExpanded'>
                     <div class='row headings'>
                         <div class='col-sm-2'>Event Name</div>
                         <div class='col-sm-1'>Date</div>
