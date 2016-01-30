@@ -1,0 +1,91 @@
+body{
+    padding:0;
+    marging:0;
+    font-family: 'Fira Sans', sans-serif;
+    font-size:12px;
+}
+    body *{
+        box-sizing:border-box;
+    }
+h4{
+    padding-bottom:20px;
+    margin-top:30px;
+}
+.row{
+    margin:0;
+}
+.no-pad{
+    padding:0;
+}
+.collapsibleHeader{
+    background-color:#fff;
+    transition: .2s background-color;
+    cursor:pointer;
+    padding:5px;
+    border-bottom:1px solid #ccc;
+}
+    .collapsibleHeader:hover{
+        background-color:#eff;
+    }
+.indicator{
+    font-size:.6em;
+    opacity:.4;
+}
+.headings{
+    font-size: 14px;
+    font-weight:bold;
+}
+
+.year{
+    padding-left:20px;
+}
+.membership{
+    padding-left:20px
+}
+.filteredEventTotals{
+    padding-left: 20px;
+}
+.events{
+    padding-left:20px;
+}
+    .events li{
+        border-bottom: 1px solid #aaa;
+        padding:10px 0
+    }
+
+.chart{
+    height:40px;
+    background:40px;
+}
+    .chart li{
+        display:inline-block;
+        background:#ccc;
+        height: 40px;
+        border-bottom:none;
+    }
+.chart.large{
+    height:80px;
+}
+
+    .chart.large li{
+        height: 80px;
+    }
+
+.swatch{
+    display:inline-block;
+    width:15px;
+    height:15px;
+    margin-right:5px;
+    background-color:#ccc;
+}
+
+.badge{
+}
+
+.key{
+    margin-top:10px
+}
+
+.faded{
+    opacity:.4;
+}

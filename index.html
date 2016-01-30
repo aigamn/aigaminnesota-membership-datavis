@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html ng-app='app'>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>AIGA Membership Data Visualization</title>
+
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='style.css'>
+    <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,500,700' rel='stylesheet' type='text/css'>
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.0/angular.min.js"></script>
+</head>
+
+<body ng-controller='MembershipCtrl'>
+    <div class='container'>
+        <h1>AIGA Minnesota Event Attendence by Membership Level and Group</h1>
+        <div class='row'>
+            <div class='col-sm-8'>
+                 Attendance by: 
+                 <div class="btn-group">
+                    <button type="button" class="btn btn-primary" ng-class="{active: breakdown == 'ticket'}" ng-click='breakdown = "ticket"'>Ticketing</button>
+                    <!--<button type="button" class="btn btn-primary" ng-class="{active: breakdown == 'membership'}" ng-click='breakdown = "membership"'>Membership</button>-->
+                    <button type="button" class="btn btn-primary" ng-class="{active: breakdown == 'student'}" ng-click='breakdown = "student"'>Student vs Non-Student</button>
+                </div>
+            </div>
+            <div class='col-sm-4 text-right'>
+                <input ng-model='searchText' type='text' placeholder='Filter Events'> 
+            </div>
+       </div>
+        
+        <div class='clearfix'></div>
+
+
+        <div ng-repeat='year in years' >
+            
+            <h2 class='collapsibleHeader' ng-click='toggleVis(year)'>
+                <span class='indicator'>
+                    <span class='glyphicon glyphicon-minus' ng-if='year.expanded'></span>
+                    <span class='glyphicon glyphicon-plus' ng-if='!year.expanded'></span>
+                </span>
+                {{::year.yearName}} <small>Info</small>
+            </h2>
+            <div class='year' ng-if='year.expanded'>
+                <h4 class='collapsibleHeader' ng-click='year.membershipExpanded = !year.membershipExpanded'>
+                    <span class='indicator'>
+                        <span class='glyphicon glyphicon-minus' ng-if='year.membershipExpanded'></span>
+                        <span class='glyphicon glyphicon-plus' ng-if='!year.membershipExpanded'></span>
+                    </span>
+                    Average Membership <span class='badge'>{{::membershipAverages[year.yearName].Total}} total members</span>
+                </h4>
+                <div class='membership' ng-if='year.membershipExpanded'>
+                    <ul class='chart list-unstyled'>
+                        <li ng-repeat='(level, average) in membershipAverages[year.yearName]' ng-if='level !== "Total"' ng-style="{width: caclulatePercent(average, membershipAverages[year.yearName].Total), background: colors[level]}" title="{{::level}}: {{::average}}"></li>
+                    </ul>
+                    <ul class='list-inline row'>
+                        <li class='col-sm-4' ng-repeat='(level, average) in membershipAverages[year.yearName]' ng-if='level !== "Total"'>
+                            <span class='swatch' ng-style="{background: colors[level]}"></span> {{::level}}: {{::average}}
+                        </li>
+                    </ul>
+                </div>
+
+                <h4 class='collapsibleHeader' ng-click='year.filteredEventExpanded = !year.filteredEventExpanded'>
+                    <span class='indicator'>
+                        <span class='glyphicon glyphicon-minus' ng-if='year.filteredEventExpanded'></span>
+                        <span class='glyphicon glyphicon-plus' ng-if='!year.filteredEventExpanded'></span>
+                    </span> 
+                    Event Totals 
+                </h4>
+                <div class='filteredEventTotals' ng-if='year.filteredEventExpanded'>
+                    <div class='row'>
+                        <div class='col-sm-11 no-pad'>
+                            <ul class='chart list-unstyled'>
+                                <li ng-repeat='(level, count) in getFilteredLevelTotals(filteredEvents[year.yearName])' ng-style="{width: caclulatePercent(count, getFilteredLevelTotals(filteredEvents[year.yearName]).Total), background: colors[level]}" title="{{level}}: {{count}}" ng-if='level !== "Total"'></li>
+                            </ul>
+                            <ul class='list-inline row'>
+                                <li class='col-sm-4' ng-repeat='(level, count) in getFilteredLevelTotals(filteredEvents[year.yearName])' ng-if='level !== "Total"'>
+                                    <span class='swatch' ng-style="{background: colors[level]}"></span> {{level}}: {{count}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class='col-sm-1 text-right'>
+                            <strong>{{getFilteredLevelTotals(filteredEvents[year.yearName]).Total}}</strong>
+                        </div>
+                    </div>    
+                </div>
+
+                <h4 class='collapsibleHeader' ng-click='year.eventsExpanded = !year.eventsExpanded'>
+                    <span class='indicator'>
+                        <span class='glyphicon glyphicon-minus' ng-if='year.eventsExpanded'></span>
+                        <span class='glyphicon glyphicon-plus' ng-if='!year.eventsExpanded'></span>
+                    </span>
+                    Events <span class='badge'>{{filteredEvents[year.yearName].length}} of {{::year.events.length}} visible<!-- -- {{filteredEvents[year.yearName].length / year.events.length * 100}}%--></span>
+                </h4>
+                <div class='events' ng-if='year.eventsExpanded'>
+                    <div class='row headings'>
+                        <div class='col-sm-2'>Event Name</div>
+                        <div class='col-sm-1'>Date</div>
+                        <div class='col-sm-1'>Time</div>
+                        <div class='col-sm-1'>Group</div>
+                        <div class='col-sm-6'>Attendence by <span ng-if='breakdown == "membership"'>membership level</span><span ng-if='breakdown == "student"'>student vs non-student</span><span ng-if='breakdown == "ticket"'>Ticket level</span></div>
+                        <div class='col-sm-1 text-right'>Total</div>
+                    </div>
+                    <ul class='list-unstyled'>
+                        <li class='row' ng-repeat='event in filteredEvents[year.yearName] = (year.events | filter:searchText | orderBy:"date")' ng-class='{faded: event.attendanceTotal < 1}'>
+                            <div class='col-sm-2'>
+                                {{event.eventName}}
+                                <span ng-if="(event.highValueCount > 0)" class='badge' title='High Value Attendence: Trustee and Leader level' ng-style='{background:colors["Leader"]}'>HV {{event.highValueCount}}</span>
+                            </div>
+
+                            <div class='col-sm-1'>
+                                {{event.prettyDate}}
+                            </div>
+
+                            <div class='col-sm-1'>
+                                {{event.timeOfDay}}
+                            </div>
+
+                            <div class='col-sm-1'>{{event.eventType}}</div>
+
+                            <div class='col-sm-6'>
+
+                                <div ng-if='breakdown == "ticket"'>
+                                    <div ng-if='event.attendanceTotal < 1'>
+                                        No member attendance information
+                                    </div>
+
+                                    <div ng-if='event.attendanceTotal > 0'>
+                                        <ul class='chart list-unstyled' ng-click='toggleVis(event)'>
+                                            <li ng-style="{width: caclulatePercent(levelCount, event.attendanceTotal), background: colors[levelName]}" ng-repeat='(levelName, levelCount) in event.membershipCounts' ng-if='levelCount > 0' title='{{::levelName}}: {{::levelCount}}'></li>
+                                        </ul>
+
+                                        <div ng-if='event.expanded'>
+                                            <ul class='key list-unstyled row'>
+                                                <li ng-repeat='(levelName, levelCount) in event.membershipCounts' class='col-sm-6' ng-class="{faded: levelCount < 1}">
+                                                    <span class='swatch' ng-style='{background: colors[levelName]}'></span>{{levelName}}: {{levelCount}}
+                                                </li>
+                                            </ul>
+                                            <br>
+
+                                            <ul class='chart list-unstyled' ng-click='toggleVis(event)'>
+                                                <li ng-class='' ng-style="{width: caclulatePercent(levelCount, event.membershipTotal), background: colors[levelName]}" ng-repeat='(levelName, levelCount) in event.membershipCounts' ng-if='levelCount > 0 && membershipLevels.indexOf(levelName) > -1' title='{{::levelName}}: {{::levelCount}}'></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div ng-if='breakdown == "student"'>
+                                    <div ng-if='event.attendanceTotal < 1'>
+                                        No member attendance information
+                                    </div>
+
+                                    <div ng-if='event.attendanceTotal > 0'>
+                                        <ul class='chart list-unstyled' ng-click='toggleVis(event)'>
+                                            <li ng-class='' ng-style="{width: caclulatePercent(levelCount, event.attendanceTotal), background: colors[levelName]}" ng-repeat='(levelName, levelCount) in event.studentCounts' ng-if='levelCount > 0' title='{{::levelName}}: {{::levelCount}}'></li>
+                                        </ul>
+
+                                        <ul ng-if='event.expanded' class='key list-unstyled row'>
+                                            <li ng-repeat='(levelName, levelCount) in event.studentCounts' class='col-sm-6'>
+                                                <span class='swatch' ng-style='{background: colors[levelName]}'></span>{{levelName}}: {{levelCount}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class='col-sm-1 text-right'>
+                                <strong>{{::event.attendanceTotal}}</strong>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="MembershipDataService.js"></script>
+    <script src="MembershipCtrl.js"></script>
+</body>
+
+</html>
