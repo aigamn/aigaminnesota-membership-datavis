@@ -245,7 +245,7 @@ app.factory('MembershipDataService', function($http, $q) {
 
         getMembershipData: function(){
 
-            var url = 'http://ec2-52-21-189-85.compute-1.amazonaws.com/membershipvis/attendance.csv';
+            var url = 'http://ec2-52-21-189-85.compute-1.amazonaws.com/membershipvis/membership.csv';
             
             return $http.get(url)
                 .then(function(response) {
