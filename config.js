@@ -1,10 +1,9 @@
 var app = angular.module('app', []);
 
-app.config(['$httpProvider', function($httpProvider) {
+app.config(function($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
-        delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    }
-]);
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+});
 
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
 if (!Object.keys) {
