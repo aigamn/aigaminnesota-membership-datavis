@@ -120,7 +120,7 @@ app.factory('MembershipDataService', function($http, $q) {
 
         getYearlyData: function(){
 
-            var url = 'https://docs.google.com/spreadsheets/d/1z4gSgzCqvzeBlk8y3q1qcTZR2reJuKzfnfyeRJBMOko/pub?output=csv';
+            var url = 'http://ec2-52-21-189-85.compute-1.amazonaws.com/membershipvis/attendance.csv';
             
             return $http.get(url)
                 .then(function(response) {
@@ -245,7 +245,7 @@ app.factory('MembershipDataService', function($http, $q) {
 
         getMembershipData: function(){
 
-            var url = 'https://docs.google.com/spreadsheets/d/1OsLyhMiaT1lKFmXtIo4_LV0RLz_PFnFXZvWhhCs5hWs/pub?output=csv';
+            var url = 'http://ec2-52-21-189-85.compute-1.amazonaws.com/membershipvis/attendance.csv';
             
             return $http.get(url)
                 .then(function(response) {
