@@ -292,10 +292,10 @@ app.factory('MembershipDataService', function($http, $q) {
                                     case "Contributor":
                                         monthlyMembershipCounts[headings[colI]] = columns[colI];
                                         break;
-                                    case "Other":
+                                    /*case "Other":
                                         monthlyMembershipCounts[headings[colI]] = columns[colI];
                                         break;
-                                    /*case "StudentMember":
+                                    case "StudentMember":
                                         monthlyMembershipCounts[headings[colI]] = columns[colI];
                                         break;
                                     case "EducatorMember":
