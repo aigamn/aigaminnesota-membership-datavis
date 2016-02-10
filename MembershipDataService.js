@@ -51,6 +51,9 @@ app.factory('MembershipDataService', function($http, $q) {
                 case "Contributor":
                     memberAttendance += count;
                     break;
+                case "Other":
+                    memberAttendance += count;
+                    break;
                 case "StudentMember":
                     studentAttendance += count;
                     break;
@@ -183,6 +186,9 @@ app.factory('MembershipDataService', function($http, $q) {
                                     case "NonMember":
                                         membershipCounts[headings[colI]] = columns[colI];
                                         break;
+                                    case "Other":
+                                        membershipCounts[headings[colI]] = columns[colI];
+                                        break;
                                     case "StudentMember":
                                         membershipCounts[headings[colI]] = columns[colI];
                                         studentCounts[headings[colI]] = columns[colI];
@@ -286,12 +292,15 @@ app.factory('MembershipDataService', function($http, $q) {
                                     case "Contributor":
                                         monthlyMembershipCounts[headings[colI]] = columns[colI];
                                         break;
-                                    case "StudentMember":
+                                    case "Other":
+                                        monthlyMembershipCounts[headings[colI]] = columns[colI];
+                                        break;
+                                    /*case "StudentMember":
                                         monthlyMembershipCounts[headings[colI]] = columns[colI];
                                         break;
                                     case "EducatorMember":
                                         monthlyMembershipCounts["EducatorMember"] = columns[colI];
-                                        break;
+                                        break;*/
                                     default:
                                         console.log("Import of MonthlyMembership failed: Heading is " + headings[colI] + " and value is " + columns[colI])    
                                 }  

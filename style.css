@@ -89,3 +89,18 @@ h4{
 .faded{
     opacity:.4;
 }
+
+@media (max-width:767px){
+    .visible-xs{
+        display:inline-block !important;
+    }
+    .year{
+        padding-left:0;
+    }
+    .membership{
+        padding-left:0;
+    }
+    .filteredEventTotals{
+        padding-left: 0;
+    }
+}

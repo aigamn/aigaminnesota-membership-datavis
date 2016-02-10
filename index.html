@@ -36,7 +36,7 @@
 
         <div ng-repeat='year in years' >
             
-            <h2 class='collapsibleHeader' ng-click='toggleVis(year)'>
+            <h2 class='collapsibleHeader' ng-click='toggleVis(year)' taborder='1'>
                 <span class='indicator'>
                     <span class='glyphicon glyphicon-minus' ng-if='year.expanded'></span>
                     <span class='glyphicon glyphicon-plus' ng-if='!year.expanded'></span>
@@ -44,51 +44,51 @@
                 {{::year.yearName}} <small>Info</small>
             </h2>
             <div class='year' ng-if='year.expanded'>
-                <h4 class='collapsibleHeader' ng-click='year.membershipExpanded = !year.membershipExpanded'>
+                <h4 class='collapsibleHeader' ng-click='year.membershipExpanded = !year.membershipExpanded' taborder='1'>
                     <span class='indicator'>
                         <span class='glyphicon glyphicon-minus' ng-if='year.membershipExpanded'></span>
                         <span class='glyphicon glyphicon-plus' ng-if='!year.membershipExpanded'></span>
                     </span>
-                    Average Membership <span class='badge'>{{::membershipAverages[year.yearName].Total}} total members</span>
+                    Average Membership for {{::year.yearName}} <span class='badge'>{{::membershipAverages[year.yearName].Total}} total members</span>
                 </h4>
                 <div class='membership' ng-if='year.membershipExpanded'>
                     <ul class='chart list-unstyled'>
                         <li ng-repeat='(level, average) in membershipAverages[year.yearName]' ng-if='level !== "Total"' ng-style="{width: caclulatePercent(average, membershipAverages[year.yearName].Total), background: colors[level]}" title="{{::level}}: {{::average}}"></li>
                     </ul>
                     <ul class='list-inline row'>
-                        <li class='col-sm-4' ng-repeat='(level, average) in membershipAverages[year.yearName]' ng-if='level !== "Total"'>
+                        <li class='col-sm-4 col-xs-6' ng-repeat='(level, average) in membershipAverages[year.yearName]' ng-if='level !== "Total"'>
                             <span class='swatch' ng-style="{background: colors[level]}"></span> {{::level}}: {{::average}}
                         </li>
                     </ul>
                 </div>
 
-                <h4 class='collapsibleHeader' ng-click='year.filteredEventExpanded = !year.filteredEventExpanded'>
+                <h4 class='collapsibleHeader' ng-click='year.filteredEventExpanded = !year.filteredEventExpanded' taborder='1'>
                     <span class='indicator'>
                         <span class='glyphicon glyphicon-minus' ng-if='year.filteredEventExpanded'></span>
                         <span class='glyphicon glyphicon-plus' ng-if='!year.filteredEventExpanded'></span>
                     </span> 
-                    Event Attendance Totals <span class='badge'>{{getFilteredLevelTotals(filteredEvents[year.yearName]).Total}} attendees</span>
+                    Event Attendance Totals for {{::year.yearName}} <span class='badge'>{{getFilteredLevelTotals(filteredEvents[year.yearName]).Total}} attendees</span>
                 </h4>
                 <div class='filteredEventTotals' ng-if='year.filteredEventExpanded'>
                             <ul class='chart list-unstyled'>
                                 <li ng-repeat='(level, count) in getFilteredLevelTotals(filteredEvents[year.yearName])' ng-style="{width: caclulatePercent(count, getFilteredLevelTotals(filteredEvents[year.yearName]).Total), background: colors[level]}" title="{{level}}: {{count}}" ng-if='level !== "Total"'></li>
                             </ul>
                             <ul class='list-inline row'>
-                                <li class='col-sm-4' ng-repeat='(level, count) in getFilteredLevelTotals(filteredEvents[year.yearName])' ng-if='level !== "Total"'>
+                                <li class='col-sm-4 col-xs-6' ng-repeat='(level, count) in getFilteredLevelTotals(filteredEvents[year.yearName])' ng-if='level !== "Total"'>
                                     <span class='swatch' ng-style="{background: colors[level]}"></span> {{level}}: {{count}}
                                 </li>
                             </ul>  
                 </div>
 
-                <h4 class='collapsibleHeader' ng-click='year.eventsExpanded = !year.eventsExpanded'>
+                <h4 class='collapsibleHeader' ng-click='year.eventsExpanded = !year.eventsExpanded' taborder='1'>
                     <span class='indicator'>
                         <span class='glyphicon glyphicon-minus' ng-if='year.eventsExpanded'></span>
                         <span class='glyphicon glyphicon-plus' ng-if='!year.eventsExpanded'></span>
                     </span>
-                    Events <span class='badge'>{{filteredEvents[year.yearName].length}} of {{::year.events.length}} visible<!-- -- {{filteredEvents[year.yearName].length / year.events.length * 100}}%--></span>
+                    Events for {{::year.yearName}} <span class='badge'>{{filteredEvents[year.yearName].length}} of {{::year.events.length}} visible<!-- -- {{filteredEvents[year.yearName].length / year.events.length * 100}}%--></span>
                 </h4>
                 <div class='events' ng-show='year.eventsExpanded'>
-                    <div class='row headings'>
+                    <div class='row headings hidden-xs'>
                         <div class='col-sm-2'>Event Name</div>
                         <div class='col-sm-1'>Date</div>
                         <div class='col-sm-1'>Time</div>
@@ -99,19 +99,21 @@
                     <ul class='list-unstyled'>
                         <li class='row' ng-repeat='event in filteredEvents[year.yearName] = (year.events | filter:searchText | orderBy:"date")' ng-class='{faded: event.attendanceTotal < 1}'>
                             <div class='col-sm-2'>
-                                {{event.eventName}}
+                                <span class='headings visible-xs'>Event Name:&nbsp;</span>{{event.eventName}}
                                 <span ng-if="(event.highValueCount > 0)" class='badge' title='High Value Attendence: Trustee and Leader level' ng-style='{background:colors["Leader"]}'>HV {{event.highValueCount}}</span>
                             </div>
 
                             <div class='col-sm-1'>
-                                {{event.prettyDate}}
+                                <span class='headings visible-xs'>Date:&nbsp;</span>{{event.prettyDate}}
                             </div>
 
                             <div class='col-sm-1'>
-                                {{event.timeOfDay}}
+                                <span class='headings visible-xs'>Time of Day:&nbsp;</span>{{event.timeOfDay}}
                             </div>
 
-                            <div class='col-sm-1'>{{event.eventType}}</div>
+                            <div class='col-sm-1'>
+                                <span class='headings visible-xs'>Group:&nbsp;</span>{{event.eventType}}
+                            </div>
 
                             <div class='col-sm-6'>
 
@@ -121,7 +123,7 @@
                                     </div>
 
                                     <div ng-if='event.attendanceTotal > 0'>
-                                        <ul class='chart list-unstyled' ng-click='toggleVis(event)'>
+                                        <ul class='chart list-unstyled' ng-click='toggleVis(event)' taborder='1'>
                                             <li ng-style="{width: caclulatePercent(levelCount, event.attendanceTotal), background: colors[levelName]}" ng-repeat='(levelName, levelCount) in event.membershipCounts' ng-if='levelCount > 0' title='{{::levelName}}: {{::levelCount}}'></li>
                                         </ul>
 
@@ -133,7 +135,7 @@
                                             </ul>
                                             <br>
 
-                                            <ul class='chart list-unstyled' ng-click='toggleVis(event)'>
+                                            <ul class='chart list-unstyled' ng-click='toggleVis(event)' taborder='1'>
                                                 <li ng-class='' ng-style="{width: caclulatePercent(levelCount, event.membershipTotal), background: colors[levelName]}" ng-repeat='(levelName, levelCount) in event.membershipCounts' ng-if='levelCount > 0 && membershipLevels.indexOf(levelName) > -1' title='{{::levelName}}: {{::levelCount}}'></li>
                                             </ul>
                                         </div>
@@ -146,7 +148,7 @@
                                     </div>
 
                                     <div ng-if='event.attendanceTotal > 0'>
-                                        <ul class='chart list-unstyled' ng-click='toggleVis(event)'>
+                                        <ul class='chart list-unstyled' ng-click='toggleVis(event)' taborder='1'>
                                             <li ng-class='' ng-style="{width: caclulatePercent(levelCount, event.attendanceTotal), background: colors[levelName]}" ng-repeat='(levelName, levelCount) in event.studentCounts' ng-if='levelCount > 0' title='{{::levelName}}: {{::levelCount}}'></li>
                                         </ul>
 
@@ -160,7 +162,7 @@
 
                             </div>
                             <div class='col-sm-1 text-right'>
-                                <strong>{{::event.attendanceTotal}}</strong>
+                                <strong><span class='headings visible-xs'><br>Total:&nbsp;</span>{{::event.attendanceTotal}}</strong>
                             </div>
                         </li>
                     </ul>
